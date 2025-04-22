@@ -90,7 +90,7 @@ async def choose_civ(clb: CallbackQuery, state: FSMContext):
         await FSMStates.set_chat_state(clb.message.chat.id, FSMStates.playing)
         await FSMStates.set_chat_data(clb.message.chat.id, {"running": True})
         async def check_status():
-            return (await state.get_data())["running"]
+            return (await state.get_data()).get("running", False)
         civ_to_player = {}
         for player_id, data in players.items():
             civ_to_player[data["civ"]] = data["username"]

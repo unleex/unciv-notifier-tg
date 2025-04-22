@@ -26,23 +26,24 @@ async def update(
     chat_id, 
     game_id,
     civ_to_player,
-    last_turn
+    last_turn,
+    last_civ
 ):
     server_response = requests.get(f"https://uncivserver.xyz/files/{game_id}_Preview")
     data = json.loads(
         gzip.decompress(base64.b64decode(server_response.content)).decode("utf-8")
     )
-    print(data)
     if "turns" not in data:
         await bot.send_message(chat_id, lexicon["notification_no_turns"])
     turn = data["turns"]
     country_turn = data["currentPlayer"]
 
-    if last_turn != turn:
+    if last_turn != turn or last_civ != country_turn:
         message = lexicon["notification"] % (turn, str(civ_to_player[country_turn]))
         await bot.send_message(chat_id, message)
         last_turn = turn
-    return last_turn
+        last_civ = country_turn
+    return last_turn, last_civ
 
 async def mainloop(
         bot,
@@ -53,16 +54,18 @@ async def mainloop(
         timeout=60
         ):
     last_turn = None
+    last_civ = None
     last_time = time.time()
     while await status_checker():
         now = time.time()
         if now - last_time > timeout:
             last_time = now
-            last_turn = await update(
+            last_turn, last_civ = await update(
                 bot=bot, 
                 chat_id=chat_id, 
                 game_id=game_id, 
                 civ_to_player=civ_to_player, 
-                last_turn=last_turn
+                last_turn=last_turn,
+                last_civ=last_civ
                 )
     
