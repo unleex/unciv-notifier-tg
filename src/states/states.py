@@ -32,7 +32,7 @@ class FSMStates(StatesGroup):
             if not overwrite:
                 data = (await ctx.get_data()) | data
             await ctx.set_data(data)
-
+    
     @staticmethod 
     async def get_chat_states(chat_id: int):
         states = {}

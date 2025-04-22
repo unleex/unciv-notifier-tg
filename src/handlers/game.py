@@ -28,6 +28,7 @@ lexicon = LEXICON_EN
 
 @rt.message(Command("start"), StateFilter(default_state))
 async def start(msg: Message, state: FSMContext):
+    await FSMStates.clear_chat_state(msg.chat.id)
     await msg.answer(lexicon["init_game"])
     await state.set_state(FSMStates.getting_game_id)
 
@@ -85,7 +86,7 @@ async def choose_civ(clb: CallbackQuery, state: FSMContext):
     await clb.message.edit_reply_markup(
         reply_markup=kb
     )
-    if all(map(lambda x: x is not None, players.keys())):
+    if all([data is not None for data in players.values()]):
         await clb.message.answer(lexicon["starting"])
         await FSMStates.set_chat_state(clb.message.chat.id, FSMStates.playing)
         await FSMStates.set_chat_data(clb.message.chat.id, {"running": True})
