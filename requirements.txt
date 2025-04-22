@@ -1,0 +1,4 @@
+aiogram
+environs
+redis
+requests
