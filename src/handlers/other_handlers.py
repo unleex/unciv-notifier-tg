@@ -3,11 +3,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 
 from aiogram import Router
-from aiogram.filters import StateFilter
+from aiogram.filters import StateFilter, CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import default_state
 from aiogram.types import Message
-from keyboards.keyboards import some_keyboard
 from lexicon.lexicon import LEXICON_EN
 from states.states import FSMStates
 
@@ -15,8 +14,15 @@ from states.states import FSMStates
 rt = Router()
 lexicon = LEXICON_EN
 
-
-@rt.message(StateFilter(FSMStates.some_state))
-async def handler2(msg: Message, state: FSMContext):
-    await msg.answer(lexicon["other_phrase"], reply_markup=some_keyboard)
+@rt.message(Command("reload"))
+async def reload(msg: Message, state: FSMContext):
     await state.clear()
+    await msg.answer("еба")
+
+@rt.message(Command("debug"))
+async def debug(msg: Message, state: FSMContext):
+    ret = [
+        "chat_states: " + str(await FSMStates.get_chat_states(msg.chat.id)),
+        "data: " + str(await state.get_data()),
+    ]
+    await msg.answer('\n'.join(ret))

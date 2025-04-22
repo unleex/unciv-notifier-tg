@@ -1,17 +1,13 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-some_button1 = InlineKeyboardButton(
-    text="Button 1",
-    callback_data="first button clicked"
-)
-some_button2 = InlineKeyboardButton(
-    text="Button 2",
-    callback_data="second button clicked"
-)
-some_keyboard = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [some_button1],
-        [some_button2]
-    ],
-    resize_keyboard=True
-)
+
+def create_civ_choosing_kb(civs: list[str]):
+    buttons = [InlineKeyboardButton(
+        text=civ,
+        callback_data=f"{civ}_civ_chosen"
+    ) for civ in civs]
+
+    return InlineKeyboardMarkup(
+        inline_keyboard=[[button] for button in buttons],
+        resize_keyboard=True
+    )
