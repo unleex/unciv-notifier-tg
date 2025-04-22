@@ -3,7 +3,7 @@ from config.config import bot, dp
 from keyboards.set_menu import set_main_menu
 from handlers import game, other_handlers
 from middlewares.middlewares import DataBaseAccessor
-
+import os
 async def main() -> None:
     open('in','w+')
     open('out','w+')
