@@ -18,4 +18,5 @@ COPY ./ ./
 
 
 # Command to run the application
+CMD ["redis-server"]
 CMD ["python", "src/main.py"]
