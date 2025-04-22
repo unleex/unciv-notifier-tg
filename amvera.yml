@@ -11,4 +11,3 @@ run:
   scriptName: src/main.py
   persistenceMount: /data
   containerPort: 80
-  servicePort: 80
