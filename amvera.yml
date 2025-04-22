@@ -1,0 +1,9 @@
+---
+version: null
+meta:
+  environment: docker
+  toolchain:
+    name: docker
+    version: latest
+build: {}
+run: {}
