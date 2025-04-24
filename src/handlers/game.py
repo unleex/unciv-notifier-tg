@@ -1,23 +1,25 @@
-import sys, os
+import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-import re 
-from mainloop import mainloop
-from config.config import bot
+import re
 
-from aiogram import Router, F, Bot
-from aiogram.filters import Command, StateFilter
+from aiogram import Bot, F, Router
+from aiogram.filters import BaseFilter, Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import default_state
-from aiogram.types import Message
+from aiogram.types import (
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+)
+from config.config import bot
 from keyboards.keyboards import create_civ_choosing_kb
 from lexicon.lexicon import LEXICON_EN
+from mainloop import mainloop
+from prompts.prompts import PROMPTS_RU
 from states.states import FSMStates
 from unciv.getdata import get_civs
-from prompts.prompts import PROMPTS_RU
-from aiogram.filters import BaseFilter
-from aiogram.types import CallbackQuery
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 class ManualCivAssignation(BaseFilter):
     async def __call__(self,  msg: Message) -> bool:

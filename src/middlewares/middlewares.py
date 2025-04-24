@@ -1,9 +1,10 @@
-from aiogram import BaseMiddleware
-from aiogram.types import TelegramObject, Chat, User
-
-from typing import Callable, Any
 import json
 import logging
+
+from typing import Any, Callable
+
+from aiogram import BaseMiddleware
+from aiogram.types import Chat, TelegramObject, User
 
 
 logger = logging.getLogger(__name__)

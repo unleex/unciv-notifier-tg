@@ -1,8 +1,8 @@
+import gigachat
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
-from aiogram.fsm.storage.redis import RedisStorage, Redis
+from aiogram.fsm.storage.redis import Redis, RedisStorage
 from environs import Env
-import gigachat
 from llm.llm import LLM
 from prompts.prompts import PROMPTS_RU
 

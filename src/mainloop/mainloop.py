@@ -1,24 +1,25 @@
-import sys, os
+import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 
+import base64
+import ctypes
+import gzip
+import json
 import time
 
-from aiogram import Router, Bot
-from aiogram.filters import StateFilter, CommandStart, Command
+import requests
+
+from aiogram import Bot, Router
+from aiogram.filters import Command, CommandStart, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import default_state
 from aiogram.types import Message
-from lexicon.lexicon import LEXICON_EN
-from states.states import FSMStates
 from config.config import bot, llm
-import requests
-import json
-import gzip
-import base64
-import ctypes
-from unciv import getdata
+from lexicon.lexicon import LEXICON_EN
 from llm.llm import LLM
+from states.states import FSMStates
+from unciv import getdata
 
 rt = Router()
 lexicon = LEXICON_EN

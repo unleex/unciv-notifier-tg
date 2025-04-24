@@ -1,7 +1,8 @@
 import asyncio
+
 from config.config import bot, dp
-from keyboards.set_menu import set_main_menu
 from handlers import game, other_handlers
+from keyboards.set_menu import set_main_menu
 from middlewares.middlewares import DataBaseAccessor
 
 async def main() -> None:

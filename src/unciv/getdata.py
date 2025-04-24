@@ -1,4 +1,4 @@
-import requests, base64, gzip, json
+import base64, gzip, json, requests
 
 def get_game_preview(gameid, server='uncivserver.xyz'):
     resp = requests.get(f'http://{server}/files/{gameid}_Preview')
