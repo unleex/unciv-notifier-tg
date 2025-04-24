@@ -73,7 +73,7 @@ async def choose_civ(clb: CallbackQuery, state: FSMContext):
     previous_civ = player_to_civ.get(clb.from_user.username, None)
     if previous_civ:
         players[previous_civ] = None
-    players[civ] = clb.from_user.username
+    players[civ] = '@' + clb.from_user.username
     await FSMStates.set_chat_data(clb.message.chat.id, {"players": players})  # type: ignore[union-attr]
     for button_row in kb.inline_keyboard:  # type: ignore[union-attr]
         button = button_row[0]
