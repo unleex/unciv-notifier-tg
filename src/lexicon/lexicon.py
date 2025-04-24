@@ -8,4 +8,6 @@ LEXICON_EN = {
     "notification": "▶️Turn %d. %s, move!",
     "notification_no_turns": "▶️Waiting for the first turn...",
     "stopping": "⏹️Stopping notifications. Good game!",
+    "generating_news": "✅Turn has ended!\n🗞️Generating news...",
+    "news": "%s"
     }

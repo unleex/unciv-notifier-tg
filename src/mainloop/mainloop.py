@@ -11,15 +11,28 @@ from aiogram.fsm.state import default_state
 from aiogram.types import Message
 from lexicon.lexicon import LEXICON_EN
 from states.states import FSMStates
-from config.config import bot
+from config.config import bot, llm
 import requests
 import json
 import gzip
 import base64
 import ctypes
+from unciv import getdata
+from llm.llm import LLM
 
 rt = Router()
 lexicon = LEXICON_EN
+
+
+def get_news(
+    news_data: dict[str, list],
+    model: LLM
+):
+    all_news: dict[str, str] = {}
+    for civ, data in news_data.items():
+        all_news[civ] = model.prompt('\n'.join(data))
+    return all_news
+
 
 async def update(
     bot: Bot,
@@ -38,11 +51,25 @@ async def update(
     turn = data["turns"]
     country_turn = data["currentPlayer"]
 
-    if last_turn != turn or last_civ != country_turn:
+    if last_civ != country_turn:
         message = lexicon["notification"] % (turn, str(civ_to_player[country_turn]))
         await bot.send_message(chat_id, message)
-        last_turn = turn
-        last_civ = country_turn
+        if last_turn != turn:
+            await bot.send_message(chat_id=chat_id, text=lexicon['generating_news'])
+            news = get_news(
+                getdata.get_notifications(
+                    gameid=game_id
+                ),
+                model=llm
+            )
+            news_text = ""
+            for civ, news in news.items():
+                news_text += f"{civ}:\n{news}\n\n"
+
+            await bot.send_message(chat_id=chat_id, text=lexicon['news'] % news_text)
+
+    last_turn = turn
+    last_civ = country_turn
     return last_turn, last_civ
 
 async def mainloop(

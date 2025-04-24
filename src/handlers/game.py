@@ -14,6 +14,7 @@ from keyboards.keyboards import create_civ_choosing_kb
 from lexicon.lexicon import LEXICON_EN
 from states.states import FSMStates
 from unciv.getdata import get_civs
+from prompts.prompts import PROMPTS_RU
 from aiogram.filters import BaseFilter
 from aiogram.types import CallbackQuery
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -24,6 +25,7 @@ class ManualCivAssignation(BaseFilter):
 
 rt = Router()
 lexicon = LEXICON_EN
+prompts = PROMPTS_RU
 
 @rt.message(Command("start"), StateFilter(default_state))
 async def start(msg: Message, state: FSMContext):
@@ -73,7 +75,7 @@ async def choose_civ(clb: CallbackQuery, state: FSMContext):
     previous_civ = player_to_civ.get(clb.from_user.username, None)
     if previous_civ:
         players[previous_civ] = None
-    players[civ] = '@' + clb.from_user.username
+    players[civ] = '@' + clb.from_user.username if clb.from_user.username else "noname"
     await FSMStates.set_chat_data(clb.message.chat.id, {"players": players})  # type: ignore[union-attr]
     for button_row in kb.inline_keyboard:  # type: ignore[union-attr]
         button = button_row[0]

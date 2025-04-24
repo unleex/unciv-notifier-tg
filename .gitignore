@@ -171,3 +171,7 @@ cython_debug/
 
 # .vscode
 .vscode
+
+####
+src/test.py
+test*.txt
