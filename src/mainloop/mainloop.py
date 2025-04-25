@@ -85,5 +85,5 @@ async def mainloop(
             last_turn=last_turn,
             last_civ=last_civ
             )
-        asyncio.sleep(timeout)
+        await asyncio.sleep(timeout)
     
