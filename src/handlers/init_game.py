@@ -29,7 +29,7 @@ rt = Router()
 lexicon = LEXICON_EN
 prompts = PROMPTS_RU
 
-@rt.message(Command("getciv"), StateFilter(FSMStates.playing))
+@rt.message(Command("getciv"), StateFilter(default_state))
 async def start(msg: Message, state: FSMContext):
     await FSMStates.clear_chat_state(msg.chat.id)
     await msg.answer(lexicon["init_game"])
