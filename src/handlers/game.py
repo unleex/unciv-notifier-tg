@@ -31,8 +31,6 @@ prompts = PROMPTS_RU
 
 @rt.message(Command("get_turn"), StateFilter(FSMStates.playing))
 async def get_turn(msg: Message, state: FSMContext):
-    async def check_status():
-        return (await state.get_data()).get("running", False)
     await mainloop.update(
         bot, 
         msg.chat.id,
@@ -40,4 +38,15 @@ async def get_turn(msg: Message, state: FSMContext):
         last_turn=-1,
         last_civ=None,
         get_news_cycle_end=False
+    )
+
+@rt.message(Command("hullo"))
+async def hullo(msg: Message, state: FSMContext):
+    async def check_status():
+        return (await state.get_data()).get("running", False)
+
+    await mainloop.mainloop(
+        bot=bot,
+        civ_to_player=(await state.get_data())["players"],
+        status_checker=check_status
     )

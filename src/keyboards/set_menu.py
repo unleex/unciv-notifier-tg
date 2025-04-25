@@ -7,5 +7,6 @@ async def set_main_menu(bot: Bot) -> None:
         BotCommand(command="start", description="Start notifications!"),
         BotCommand(command="stop", description="Stop notifications"),
         BotCommand(command="get_turn", description="Get current turn"),
+        BotCommand(command="hullo", description="Try to reload if notifications aren't being sent"),
         ]
     await bot.set_my_commands(main_menu_commands)
