@@ -39,5 +39,6 @@ async def get_turn(msg: Message, state: FSMContext):
         civ_to_player=(await state.get_data())["players"],
         check_status=check_status,
         last_turn=-1,
-        last_civ=None
+        last_civ=None,
+        get_news_cycle_end=False
     )

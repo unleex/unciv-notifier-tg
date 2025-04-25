@@ -41,7 +41,8 @@ async def update(
     game_id,
     civ_to_player,
     last_turn,
-    last_civ
+    last_civ,
+    get_news_cycle_end: bool = True
 ):
     server_response = requests.get(f"https://uncivserver.xyz/files/{game_id}_Preview")
     data = json.loads(
@@ -55,7 +56,7 @@ async def update(
     if last_civ != country_turn:
         message = lexicon["notification"] % (turn, str(civ_to_player[country_turn]))
         await bot.send_message(chat_id, message)
-        if last_turn != turn:
+        if last_turn != turn and get_news_cycle_end:
             await bot.send_message(chat_id=chat_id, text=lexicon['generating_news'])
             news = get_news(
                 getdata.get_notifications(
