@@ -20,10 +20,11 @@ from lexicon.lexicon import LEXICON_EN
 from llm.llm import LLM
 from states.states import FSMStates
 from unciv import getdata
+from prompts.prompts import PROMPTS_RU
 
 rt = Router()
 lexicon = LEXICON_EN
-
+prompts = PROMPTS_RU
 
 def get_news(
     news_data: dict[str, list],
@@ -31,7 +32,7 @@ def get_news(
 ):
     all_news: dict[str, str] = {}
     for civ, data in news_data.items():
-        all_news[civ] = model.prompt('\n'.join(data))
+        all_news[civ] = model.prompt(prompts["get_news"] % civ + '\n' + '\n'.join(data))
     return all_news
 
 
