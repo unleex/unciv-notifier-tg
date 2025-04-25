@@ -1,24 +1,17 @@
 import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-
+import asyncio
 import base64
-import ctypes
 import gzip
 import json
-import time
 
 import requests
 
 from aiogram import Bot, Router
-from aiogram.filters import Command, CommandStart, StateFilter
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import default_state
-from aiogram.types import Message
-from config.config import bot, llm
+from config.config import llm
 from lexicon.lexicon import LEXICON_EN
 from llm.llm import LLM
-from states.states import FSMStates
 from unciv import getdata
 from prompts.prompts import PROMPTS_RU
 
@@ -85,17 +78,14 @@ async def mainloop(
         ):
     last_turn = None
     last_civ = None
-    last_time = time.time()
     while await status_checker():
-        now = time.time()
-        if now - last_time > timeout:
-            last_time = now
-            last_turn, last_civ = await update(
-                bot=bot, 
-                chat_id=chat_id, 
-                game_id=game_id, 
-                civ_to_player=civ_to_player, 
-                last_turn=last_turn,
-                last_civ=last_civ
-                )
+        last_turn, last_civ = await update(
+            bot=bot, 
+            chat_id=chat_id, 
+            game_id=game_id, 
+            civ_to_player=civ_to_player, 
+            last_turn=last_turn,
+            last_civ=last_civ
+            )
+        asyncio.sleep(timeout)
     
