@@ -44,7 +44,7 @@ async def update(
     last_turn,
     last_civ,
     get_news_cycle_end: bool = True
-):
+) -> tuple:
     server_response = requests.get(f"https://uncivserver.xyz/files/{game_id}_Preview")
     data = json.loads(
         gzip.decompress(base64.b64decode(server_response.content)).decode("utf-8")

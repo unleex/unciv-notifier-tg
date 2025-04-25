@@ -31,22 +31,26 @@ prompts = PROMPTS_RU
 
 @rt.message(Command("get_turn"), StateFilter(FSMStates.playing))
 async def get_turn(msg: Message, state: FSMContext):
+    data = (await state.get_data())
     await mainloop.update(
         bot, 
         msg.chat.id,
-        civ_to_player=(await state.get_data())["players"],
+        civ_to_player=data["players"],
         last_turn=-1,
         last_civ=None,
-        get_news_cycle_end=False
+        get_news_cycle_end=False,
+        game_id=data["game_id"]
     )
 
 @rt.message(Command("hullo"), StateFilter(FSMStates.playing))
 async def hullo(msg: Message, state: FSMContext):
     async def check_status():
         return (await state.get_data()).get("running", False)
-
+    data = (await state.get_data())
     await mainloop.mainloop(
         bot=bot,
-        civ_to_player=(await state.get_data())["players"],
+        game_id=data["game_id"],
+        chat_id=msg.chat.id,
+        civ_to_player=data["players"],
         status_checker=check_status
     )
