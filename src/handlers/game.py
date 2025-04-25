@@ -33,7 +33,7 @@ prompts = PROMPTS_RU
 async def get_turn(msg: Message, state: FSMContext):
     async def check_status():
         return (await state.get_data()).get("running", False)
-    mainloop.update(
+    await mainloop.update(
         bot, 
         msg.chat.id,
         civ_to_player=(await state.get_data())["players"],
