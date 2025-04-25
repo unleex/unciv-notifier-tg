@@ -40,7 +40,7 @@ async def get_turn(msg: Message, state: FSMContext):
         get_news_cycle_end=False
     )
 
-@rt.message(Command("hullo"))
+@rt.message(Command("hullo"), StateFilter(FSMStates.playing))
 async def hullo(msg: Message, state: FSMContext):
     async def check_status():
         return (await state.get_data()).get("running", False)
