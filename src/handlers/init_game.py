@@ -29,7 +29,7 @@ rt = Router()
 lexicon = LEXICON_EN
 prompts = PROMPTS_RU
 
-@rt.message(Command("getciv"), StateFilter(default_state))
+@rt.message(Command("start"), StateFilter(default_state))
 async def start(msg: Message, state: FSMContext):
     await FSMStates.clear_chat_state(msg.chat.id)
     await msg.answer(lexicon["init_game"])
@@ -112,13 +112,12 @@ async def start_game_if_ready(chat_id, state, bot: Bot):
             timeout=60
         )
 
-
-
         
 @rt.message(Command("stop"), StateFilter(FSMStates.playing))
 async def stop(msg: Message):
     await msg.answer(lexicon["stopping"])
     await FSMStates.clear_chat(msg.chat.id)
+
 
 @rt.message(StateFilter(FSMStates.waiting_for_assigning_civs), ManualCivAssignation())
 async def manual_assign_civ(msg: Message, state: FSMContext):
