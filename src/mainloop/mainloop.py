@@ -58,11 +58,9 @@ async def update(
                 ),
                 model=llm
             )
-            news_text = ""
             for civ, news in news.items():
-                news_text += f"{civ}:\n{news}\n\n"
+                await bot.send_message(chat_id=chat_id, text=lexicon['news'] % news)
 
-            await bot.send_message(chat_id=chat_id, text=lexicon['news'] % news_text)
 
     last_turn = turn
     last_civ = country_turn
