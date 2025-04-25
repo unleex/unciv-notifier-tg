@@ -1,25 +1,39 @@
-import sys, os
+import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 
+import base64
+import ctypes
+import gzip
+import json
 import time
 
-from aiogram import Router, Bot
-from aiogram.filters import StateFilter, CommandStart, Command
+import requests
+
+from aiogram import Bot, Router
+from aiogram.filters import Command, CommandStart, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import default_state
 from aiogram.types import Message
+from config.config import bot, llm
 from lexicon.lexicon import LEXICON_EN
+from llm.llm import LLM
 from states.states import FSMStates
-from config.config import bot
-import requests
-import json
-import gzip
-import base64
-import ctypes
+from unciv import getdata
 
 rt = Router()
 lexicon = LEXICON_EN
+
+
+def get_news(
+    news_data: dict[str, list],
+    model: LLM
+):
+    all_news: dict[str, str] = {}
+    for civ, data in news_data.items():
+        all_news[civ] = model.prompt('\n'.join(data))
+    return all_news
+
 
 async def update(
     bot: Bot,
@@ -38,11 +52,25 @@ async def update(
     turn = data["turns"]
     country_turn = data["currentPlayer"]
 
-    if last_turn != turn or last_civ != country_turn:
+    if last_civ != country_turn:
         message = lexicon["notification"] % (turn, str(civ_to_player[country_turn]))
         await bot.send_message(chat_id, message)
-        last_turn = turn
-        last_civ = country_turn
+        if last_turn != turn:
+            await bot.send_message(chat_id=chat_id, text=lexicon['generating_news'])
+            news = get_news(
+                getdata.get_notifications(
+                    gameid=game_id
+                ),
+                model=llm
+            )
+            news_text = ""
+            for civ, news in news.items():
+                news_text += f"{civ}:\n{news}\n\n"
+
+            await bot.send_message(chat_id=chat_id, text=lexicon['news'] % news_text)
+
+    last_turn = turn
+    last_civ = country_turn
     return last_turn, last_civ
 
 async def mainloop(

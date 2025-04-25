@@ -2,3 +2,4 @@ aiogram
 environs
 redis
 requests
+gigachat

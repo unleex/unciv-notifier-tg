@@ -5,7 +5,9 @@ LEXICON_EN = {
     "manually_assigned_civ": "Selected %s as player of %s",
     "invalid_civ": "Invalid civ: %s!",
     "starting": "❇️Starting!",
-    "notification": "▶️Turn %d. @%s, move!",
+    "notification": "▶️Turn %d. %s, move!",
     "notification_no_turns": "▶️Waiting for the first turn...",
     "stopping": "⏹️Stopping notifications. Good game!",
+    "generating_news": "✅Turn has ended!\n🗞️Generating news...",
+    "news": "%s"
     }

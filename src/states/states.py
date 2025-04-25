@@ -1,12 +1,10 @@
-from aiogram.fsm.state import State, StatesGroup
-
-from config.config import bot, storage
-
 import json
 
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.base import StorageKey
+
+from config.config import bot, storage
 
 class FSMStates(StatesGroup):
     getting_game_id = State()
