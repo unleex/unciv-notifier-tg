@@ -21,5 +21,5 @@ llm = LLM(
     credentials=GIGACHAT_API_TOKEN,
     verify_ssl_certs=False,
     system_prompt=prompts["news_system"],
-    max_tokens=300
+    max_tokens=150
 )
