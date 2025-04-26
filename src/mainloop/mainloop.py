@@ -48,8 +48,6 @@ async def update(
     country_turn = data["currentPlayer"]
 
     if last_civ != country_turn:
-        message = lexicon["notification"] % (turn, str(civ_to_player[country_turn]))
-        await bot.send_message(chat_id, message)
         if last_turn != turn and get_news_cycle_end:
             await bot.send_message(chat_id=chat_id, text=lexicon['generating_news'])
             news = get_news(
@@ -60,6 +58,10 @@ async def update(
             )
             for civ, news in news.items():
                 await bot.send_message(chat_id=chat_id, text=lexicon['news'] % news)
+                
+        message = lexicon["notification"] % (turn, str(civ_to_player[country_turn]))
+        await bot.send_message(chat_id, message)
+        
 
 
     last_turn = turn
@@ -74,6 +76,7 @@ async def mainloop(
         civ_to_player,
         timeout=60
         ):
+    first = True
     last_turn = None
     last_civ = None
     while await status_checker():
@@ -83,7 +86,9 @@ async def mainloop(
             game_id=game_id, 
             civ_to_player=civ_to_player, 
             last_turn=last_turn,
-            last_civ=last_civ
+            last_civ=last_civ,
+            get_news_cycle_end=not first
             )
+        first = False
         await asyncio.sleep(timeout)
     
