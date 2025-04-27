@@ -134,6 +134,6 @@ async def manual_assign_civ(msg: Message, state: FSMContext):
             players[assigned_civ] = None
             break
     players[civ] = user
-    await FSMStates.set_chat_data(msg.chat.id, {"players": players, "turn_n": 0, "current_civ": "Unknown"})
+    await FSMStates.set_chat_data(msg.chat.id, {"players": players})
     await msg.reply(lexicon["manually_assigned_civ"] % (user, civ))
     await start_game_if_ready(msg.chat.id, state, bot)

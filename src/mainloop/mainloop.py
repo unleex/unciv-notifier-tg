@@ -61,8 +61,6 @@ async def update(
                 
         message = lexicon["notification"] % (turn, str(civ_to_player[country_turn]))
         await bot.send_message(chat_id, message)
-        
-
 
     last_turn = turn
     last_civ = country_turn
