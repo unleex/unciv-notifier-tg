@@ -2,6 +2,7 @@ import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import re
+import asyncio 
 
 from aiogram import Bot, F, Router
 from aiogram.filters import BaseFilter, Command, StateFilter
@@ -94,24 +95,24 @@ async def choose_civ(clb: CallbackQuery, state: FSMContext):
 
 
 async def start_game_if_ready(chat_id, state, bot: Bot):
-    statedata = (await state.get_data())
-    players = statedata["players"]
+    data = (await state.get_data())
+    players = data["players"]
     if all([data is not None for data in players.values()]):
         await bot.send_message(chat_id, lexicon["starting"])
         await FSMStates.set_chat_state(chat_id, FSMStates.playing)
         await FSMStates.set_chat_data(chat_id, {"running": True})
         async def check_status():
             return (await state.get_data()).get("running", False)
-        civ_to_player = players
-        await mainloop.mainloop(
-            bot=bot, 
-            chat_id=chat_id, 
-            game_id=statedata["game_id"],
-            civ_to_player=civ_to_player,
-            status_checker=check_status,
-            timeout=60
-        )
-
+        asyncio.create_task(
+            mainloop.mainloop(
+                bot=bot,
+                game_id=data["game_id"],
+                chat_id=chat_id,
+                civ_to_player=players,
+                status_checker=check_status,
+            ),
+        name="mainloop"
+    )
         
 @rt.message(Command("stop"), StateFilter(FSMStates.playing))
 async def stop(msg: Message):
