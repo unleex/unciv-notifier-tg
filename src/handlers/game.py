@@ -2,6 +2,7 @@ import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import re
+import asyncio
 
 from aiogram import Bot, F, Router
 from aiogram.filters import BaseFilter, Command, StateFilter
@@ -31,22 +32,32 @@ prompts = PROMPTS_RU
 
 @rt.message(Command("get_turn"), StateFilter(FSMStates.playing))
 async def get_turn(msg: Message, state: FSMContext):
+    data = (await state.get_data())
     await mainloop.update(
         bot, 
         msg.chat.id,
-        civ_to_player=(await state.get_data())["players"],
+        civ_to_player=data["players"],
         last_turn=-1,
         last_civ=None,
-        get_news_cycle_end=False
+        get_news_cycle_end=False,
+        game_id=data["game_id"]
     )
 
 @rt.message(Command("hullo"), StateFilter(FSMStates.playing))
 async def hullo(msg: Message, state: FSMContext):
+    for task in asyncio.all_tasks():
+        if task.get_name() == "mainloop":
+            task.cancel()
     async def check_status():
         return (await state.get_data()).get("running", False)
-
-    await mainloop.mainloop(
-        bot=bot,
-        civ_to_player=(await state.get_data())["players"],
-        status_checker=check_status
+    data = await state.get_data()
+    asyncio.create_task(
+        mainloop.mainloop(
+            bot=bot,
+            game_id=data["game_id"],
+            chat_id=msg.chat.id,
+            civ_to_player=data["players"],
+            status_checker=check_status,
+        ),
+        name="mainloop"
     )
